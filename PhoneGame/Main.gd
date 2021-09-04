@@ -34,5 +34,5 @@ func spawn_circle(_position=null):
 # It then spawns a new circle *away* from the current circle's Area2D position
 func _on_Jumper_captured(object):
 	$Camera2D.position = object.position
-	object.capture()
+	object.capture(player)
 	call_deferred("spawn_circle")

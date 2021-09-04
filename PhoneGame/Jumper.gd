@@ -29,7 +29,6 @@ func _on_Jumper_area_entered(area):
 	# This gets the vector between your position and the target position
 	# Then it gets the ANGLE of this vector. Since a vector is simply a magnitude + direction (angle)
 	# And it sets the Pivot angle to this angle so that the player always snaps to this place
-	target.get_node("Pivot").rotation = (position - target.position).angle()
 	velocity = Vector2.ZERO
 	emit_signal("captured", area)
 	
@@ -46,3 +45,12 @@ func _physics_process(delta):
 		transform = target.orbit_position.global_transform
 	else:
 		position += velocity * delta
+
+func die():
+	target = null
+	queue_free()
+
+
+func _on_VisibilityNotifier2D_screen_exited():
+	if !target:
+		die()
