@@ -1,11 +1,14 @@
 extends Area2D
 
 onready var orbit_position = $Pivot/OrbitPosition
+onready var move_tween = $MoveTween
 enum MODES {STATIC, LIMITED}
 
 var radius = 100
 var rotation_speed = PI
 var mode = MODES.STATIC
+var move_range = 100
+var move_speed = 1.0
 var num_orbits = 3
 var current_orbits = 0
 var orbit_start = null #start position. where you start orbiting. THIS IS AN ANGLE
@@ -21,6 +24,7 @@ func init(_position, _radius=radius, _mode=MODES.LIMITED):
 	$Sprite.scale = Vector2(1,1) * radius / img_size
 	orbit_position.position.x = radius + 25
 	rotation_speed *= pow(-1, randi() % 2)
+	set_tween()
 	
 func set_mode(_mode):
 	mode = _mode
@@ -62,3 +66,13 @@ func capture(target):
 	
 	# Remember this is in radians
 	orbit_start = $Pivot.rotation
+
+func set_tween(object=null, key=null):
+	if move_range == 0:
+		return
+	move_range *= -1
+	move_tween.interpolate_property(self, "position:x",
+	 position.x,
+	 position.x + move_range,
+	 move_speed, Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
+	move_tween.start()
